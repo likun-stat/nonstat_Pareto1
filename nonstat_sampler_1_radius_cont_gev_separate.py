@@ -202,9 +202,10 @@ if __name__ == "__main__":
    beta_gev_accept = 0
    
    phi_at_knots_and_radius = phi_at_knots_and_radius[:(n_phi_range_knots+1)]
-   prop_Sigma['gev_params'] = prop_Sigma['phi_radius'][(n_phi_range_knots+1):, (n_phi_range_knots+1):]
-   prop_Sigma['phi_radius'] = prop_Sigma['phi_radius'][:(n_phi_range_knots+1), :(n_phi_range_knots+1)]
-   sigma_m['gev_params'] = sigma_m['phi_radius']
+   if(len(prop_Sigma['gev_params'])==0):
+       prop_Sigma['gev_params'] = prop_Sigma['phi_radius'][(n_phi_range_knots+1):, (n_phi_range_knots+1):]
+       prop_Sigma['phi_radius'] = prop_Sigma['phi_radius'][:(n_phi_range_knots+1), :(n_phi_range_knots+1)]
+       sigma_m['gev_params'] = sigma_m['phi_radius']
    
    # -----------------------------------------------------------------------------------
    # -----------------------------------------------------------------------------------

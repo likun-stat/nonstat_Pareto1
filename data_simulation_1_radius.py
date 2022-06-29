@@ -26,8 +26,8 @@ Stations = np.c_[uniform.rvs(0,10,n_s),uniform.rvs(0,10,n_s)]
 # x_tmp,y_tmp = np.meshgrid(loc_tmp, loc_tmp)
 # Knots_data = np.c_[x_tmp.flatten(), y_tmp.flatten()]
 xmin=0; xmax=10; ymin=0; ymax=10; Ngrid = 9
-x_vals = np.linspace(xmin + 1,  xmax + 1, num=np.int(2*np.sqrt(Ngrid)))
-y_vals = np.linspace(ymin + 1,  ymax + 1, num=np.int(2*np.sqrt(Ngrid)))
+x_vals = np.linspace(xmin + 1,  xmax + 1, num=int(2*np.sqrt(Ngrid)))
+y_vals = np.linspace(ymin + 1,  ymax + 1, num=int(2*np.sqrt(Ngrid)))
 part1_x, part1_y = np.meshgrid(x_vals[np.arange(0,len(x_vals)-1,2)],
               y_vals[np.arange(0,len(x_vals)-1,2)])
 part2_x, part2_y = np.meshgrid(x_vals[np.arange(1,len(x_vals)-1,2)],
@@ -43,7 +43,7 @@ radius_from_knots = np.repeat(radius, Knots_data.shape[0])
 # radius_from_knots[0]=4; radius_from_knots[12]=4
 
 # import matplotlib.pyplot as plt
-# circle0 = plt.Circle((Knots_data[0,0],Knots_data[0,1]), radius_from_knots[0], color='b', fill=False)
+# circle0 = plt.Circle((Knots_data[0,0],Knots_data[0,1]), radius_from_knots[0], color='r', fill=False)
 # circle1 = plt.Circle((Knots_data[1,0],Knots_data[1,1]), radius_from_knots[1], color='r', fill=False)
 # circle2 = plt.Circle((Knots_data[2,0],Knots_data[2,1]), radius_from_knots[2], color='r', fill=False)
 # circle3 = plt.Circle((Knots_data[3,0],Knots_data[3,1]), radius_from_knots[3], color='r', fill=False)
@@ -55,7 +55,7 @@ radius_from_knots = np.repeat(radius, Knots_data.shape[0])
 # circle9 = plt.Circle((Knots_data[9,0],Knots_data[9,1]), radius_from_knots[9], color='r', fill=False)
 # circle10 = plt.Circle((Knots_data[10,0],Knots_data[10,1]), radius_from_knots[10], color='r', fill=False)
 # circle11 = plt.Circle((Knots_data[11,0],Knots_data[11,1]), radius_from_knots[11], color='r', fill=False)
-# circle12 = plt.Circle((Knots_data[12,0],Knots_data[12,1]), radius_from_knots[12], color='b', fill=False)
+# circle12 = plt.Circle((Knots_data[12,0],Knots_data[12,1]), radius_from_knots[12], color='r', fill=False)
 
 # ax = plt.gca()
 # ax.cla() # clear things for fresh plot
@@ -76,10 +76,17 @@ radius_from_knots = np.repeat(radius, Knots_data.shape[0])
 # ax.add_patch(circle10)
 # ax.add_patch(circle11)
 # ax.add_patch(circle12)
-
+# plt.xlabel('x'); plt.ylabel('y')
 # figure = plt.gcf()
-# figure.set_size_inches(4, 3.3)
+# figure.set_size_inches(3.4, 3.4)
 # plt.savefig("/Users/LikunZhang/Desktop/PyCode/Simulation_figures/R_knots.png", dpi=94)
+
+
+## ***********************
+test = 1 
+np.random.seed(seed=test)
+## ***********************
+
 
 # -------------- 3. Generate covariance matrix -----------------
 from scipy.spatial import distance
@@ -126,9 +133,23 @@ d = eig_Cor[0]
 
 # -------------- 4. Generate scaling factor -----------------
 # phi values at the knots
+## Scenario 1
 phi_at_knots = 0.65-np.sqrt((Knots_data[:,0]-3)**2/4 + (Knots_data[:,1]-3)**2/3)/10
-# phi_at_knots = 0.65-np.sqrt((Knots_data[:,0]-5.1)**2/5 + (Knots_data[:,1]-5.3)**2/4)/11.6
-# phi_at_knots = np.array([0.6094903, 0.4054797, 0.3700976, 0.4705422, 0.4340951, 0.4411079, 0.3704561, 0.5124574, 0.5600023])
+
+## Scenario 2
+# from scipy.stats import multivariate_normal
+# phi_at_knots = np.empty(Knots_data.shape[0])
+# for wh in np.arange(Knots_data.shape[0]):
+#     phi_at_knots[wh] = 13*multivariate_normal.pdf(Knots_data[wh,:], mean=np.array([5,6]), 
+#                        cov = 4*np.array([[1,0.6],[0.6,1]]))+0.25
+
+## Scenario 3
+# from scipy.stats import multivariate_normal
+# phi_at_knots = np.empty(Knots_data.shape[0])
+# for wh in np.arange(Knots_data.shape[0]):
+#     phi_at_knots[wh] = 27*(0.4*multivariate_normal.pdf(Knots_data[wh,:], mean=np.array([2,3]), cov = 2.7*np.array([[1,0.2],[0.2,1]]))+
+#   0.6*multivariate_normal.pdf(Knots_data[wh,:], mean=np.array([8,8.5]), cov = 6*np.array([[1,-0.3],[-0.3,1]])))+0.17
+   
 # phi_vec = np.repeat(np.nan, n_s)
 # for idx in np.arange(n_s):
 #   d_tmp = distance.cdist(Stations[idx,:].reshape((-1,2)),Knots_data)
